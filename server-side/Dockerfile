@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
 
 ENV COQUI_TOS_AGREED=1
 ENV PYTHONUNBUFFERED=1
+ENV TTS_HOME /app/xtts_cache
 
 COPY requirements.txt .
 
@@ -25,4 +26,4 @@ COPY server.py .
 
 EXPOSE 5002
 
-CMD ["python", "server.py"]
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "5002"]

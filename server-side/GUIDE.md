@@ -1,53 +1,78 @@
-# Text-to-Speech (TTS) Generator Guide
+# Guide: Running the TTS Generation Server
 
-This guide explains how to use this project to generate speech from a text file using the Coqui TTS model within a Docker container.
+This guide explains how to run the Text-to-Speech (TTS) server using Docker and how to interact with it to generate audio files.
 
-## 1. Project Overview
+## 1. Prerequisites
 
-This project uses the `coqui/xtts_v2` text-to-speech model to convert text into an audio file. The process is managed within a Docker container to ensure all dependencies and configurations are handled correctly.
+- [Docker](https://docs.docker.com/get-docker/) must be installed and running on your system.
+- [Docker Compose](https://docs.docker.com/compose/install/) is included with most Docker Desktop installations and is required.
 
-## 2. File Structure
+## 2. Running the Server
 
-- `Dockerfile`: Configuration to build the Docker image.
-- `server.py`: The main Python script that generates audio.
-- `requirements.txt`: Required Python packages.
-- `test.txt`: Your input text file.
-- `Recording.wav`: Your primary custom voice file. The script will use this file if it exists.
-- `male.wav`: A fallback voice file. If `Recording.wav` is not found, the script will use this.
-- `output.wav`: The generated audio output.
+The `docker-compose.yml` file handles all the configuration for running the server in a container.
 
-...
+1.  Open your terminal.
+2.  Navigate to the `server-side` directory:
+    ```bash
+    cd path/to/your/project/tts-gen/server-side
+    ```
+3.  Run the following command to build and start the server:
 
-## 5. Customization
+    ```bash
+    docker-compose up --build
+    ```
 
-### Using a Custom Voice
+    - The first time you run this, it will take a while to download the TTS model and build the Docker image.
+    - The server will be running and listening on `http://localhost:5002`.
 
-The script is designed to prioritize your own high-quality voice recordings.
+## 3. Generating Speech
 
-1.  **Primary Voice (`Recording.wav`)**: To use your own voice, place a `.wav` file named `Recording.wav` in the `server-side` directory. The script will automatically use this file if it finds it.
+Yes, it is now a server. You can send `POST` requests to it to synthesize text into speech.
 
-2.  **Fallback Voice (`male.wav`)**: If `Recording.wav` is not found, the script will look for `male.wav` and use it as a fallback.
+There are two main ways to interact with the API:
 
-3.  **Automatic Download**: If neither `Recording.wav` nor `male.wav` is found, the script will automatically download a default male voice file and save it as `male.wav`.
+### Option A: Using the Interactive API Docs (Recommended)
 
-### Changing the Language
+1.  Once the server is running, open your web browser and go to:
+    **[http://localhost:5002/docs](http://localhost:5002/docs)**
+2.  You will see the interactive API documentation (Swagger UI).
+3.  Click on the `/generate-tts/` endpoint, then click "Try it out".
+4.  You can modify the request body to change the text you want to generate.
+    ```json
+    {
+      "text": "Hello, this is a test from the API."
+    }
+    ```
+5.  Click "Execute". The server will generate the audio and send it back as a downloadable `output.wav` file.
 
-You can change the output language by editing the `language` parameter in `server-side/server.py`. For example, to use Portuguese:
+### Option B: Using `curl` from the command line
 
-To run the generator, navigate to the server-side directory and use this command:
+You can also use a command-line tool like `curl` to send requests.
 
-1 docker run --rm -v "$(pwd):/app" tts-generator
+1.  Open a new terminal.
+2.  Run the following command:
 
-For Windows PowerShell users:
+    ```bash
+    curl -X POST "http://localhost:5002/generate-tts/" \
+         -H "Content-Type: application/json" \
+         -d '{"text": "Hello from the command line."}' \
+         --output generated_audio.wav
+    ```
 
-1 docker run --rm -v ${PWD}:/app tts-generator
+3.  This command will send the text to the server and save the resulting audio as `generated_audio.wav` in your current directory.
 
-```python
-# From
-language="en",
+## 4. Using a Custom Voice
 
-# To
-language="pt",
-```
+The server is configured to look for a specific audio file to use as the voice for synthesis.
 
-After making changes to `server.py`, you will need to rebuild the Docker image using the `docker build` command from Step 3.
+- To use your own voice, place a WAV file named `Recording.wav` inside the `server-side` directory.
+- If `Recording.wav` is not found, the server will fall back to using the default `male.wav` file.
+- If you change the voice file while the server is running, you may need to restart it for the changes to take effect: `docker-compose down && docker-compose up --build`.
+
+## 5. Troubleshooting
+
+### Issue: Docker creates a weirdly named directory (e.g., `server-side;C...`)
+
+This problem often occurs on Windows when using `docker run` directly from certain terminals with commands like `-v $(pwd):/app`. The `docker-compose.yml` file is specifically designed to prevent this.
+
+**Solution:** Always use the `docker-compose up` command from within the `server-side` directory as described in this guide. It correctly handles the file paths for you.

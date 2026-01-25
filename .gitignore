@@ -1,1 +1,4 @@
+node_modules
+__pycache__
+xtts_cache
 *.wav
