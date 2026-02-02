@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  tts-server:
+  ttsgen:
     build:
       context: ./server-side
       dockerfile: Dockerfile
@@ -11,3 +9,13 @@ services:
       - ./server-side:/app
       - ./server-side/xtts_cache:/app/xtts_cache
     restart: unless-stopped
+  # app:
+  #   build:
+  #     context: ./app
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./app:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     - tts-server
+  #   restart: unless-stopped
