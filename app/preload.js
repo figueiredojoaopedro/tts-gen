@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
     selectOutputFolder: () => ipcRenderer.invoke('select-output-folder'),
+    joinPaths: (...paths) => ipcRenderer.invoke('join-paths', ...paths),
     selectAudioFilesToConvert: () => ipcRenderer.invoke('select-audio-files-to-convert'),
     convertAudio: (inputFilePath, outputFolderPath, format) => ipcRenderer.invoke('convert-audio', inputFilePath, outputFolderPath, format),
     readFileAsBase64: (filePath) => ipcRenderer.invoke('read-file-as-base64', filePath),

@@ -1,66 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>TTS Generator</title>
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
     <h1>TTS Generator</h1>
     <div id="app">
-        <div class="input-group">
-            <label for="speakerWav">Speaker Audio Sample (WAV):</label>
-            <input type="file" id="speakerWav" accept=".wav">
-        </div>
+      <div class="input-group">
+        <label for="speakerWav">Speaker Audio Sample (WAV):</label>
+        <input type="file" id="speakerWav" accept=".wav" />
+      </div>
 
-        <div class="input-group">
-            <label for="modelSelect">Select Model:</label>
-            <select id="modelSelect">
-                <option value="tts_models/multilingual/multi-dataset/xtts_v2">XTTS v2 (Multilingual)</option>
-                <!-- Add more models here if the backend supports them -->
-            </select>
-        </div>
+      <div class="input-group">
+        <label for="modelSelect">Select Model:</label>
+        <select id="modelSelect">
+          <option value="tts_models/multilingual/multi-dataset/xtts_v2">
+            XTTS v2 (Multilingual)
+          </option>
+          <!-- Add more models here if the backend supports them -->
+        </select>
+      </div>
 
-        <div class="input-group">
-            <label for="textToGenerate">Text to Generate:</label>
-            <textarea id="textToGenerate" rows="5" placeholder="Enter text here..."></textarea>
-        </div>
+      <div class="input-group">
+        <label for="languageSelect">Select Language:</label>
+        <select id="languageSelect">
+          <!-- Options will be dynamically loaded by renderer.js -->
+        </select>
+      </div>
 
-        <div class="input-group">
-            <label for="outputFolder">Output Folder:</label>
-            <input type="text" id="outputFolder" readonly>
-            <button id="selectOutputFolder">Select Folder</button>
-        </div>
+      <div class="input-group">
+        <label for="textToGenerate">Text to Generate:</label>
+        <textarea
+          id="textToGenerate"
+          rows="5"
+          placeholder="Enter text here..."></textarea>
+      </div>
 
-        <button id="generateButton">Generate Audio</button>
+      <div class="input-group">
+        <label for="outputFolder">Output Folder:</label>
+        <input type="text" id="outputFolder" readonly />
+        <button id="selectOutputFolder">Select Folder</button>
+      </div>
 
-        <hr style="margin: 40px 0;">
+      <button id="generateButton">Generate Audio</button>
 
-        <h2>Audio Converter</h2>
-        <div class="input-group">
-            <label for="audioFilesToConvert">Select Audio Files:</label>
-            <input type="file" id="audioFilesToConvert" accept="audio/*" multiple>
-        </div>
+      <hr style="margin: 40px 0" />
 
-        <div class="input-group">
-            <label for="convertFormat">Convert to Format:</label>
-            <select id="convertFormat">
-                <option value="wav">WAV</option>
-                <option value="mp3">MP3</option>
-                <option value="mp4">MP4</option>
-            </select>
-        </div>
+      <h2>Audio Converter</h2>
+      <div class="input-group">
+        <label for="selectAudioFilesButton">Select Audio Files:</label>
+        <button id="selectAudioFilesButton">Select Files</button>
+        <span id="selectedAudioFilesCount">0 files selected</span>
+      </div>
 
-        <div class="input-group">
-            <label for="convertedOutputFolder">Converted Output Folder:</label>
-            <input type="text" id="convertedOutputFolder" readonly>
-            <button id="selectConvertedOutputFolder">Select Folder</button>
-        </div>
+      <div class="input-group">
+        <label for="convertFormat">Convert to Format:</label>
+        <select id="convertFormat">
+          <option value="wav">WAV</option>
+          <option value="mp3">MP3</option>
+          <option value="mp4">MP4</option>
+        </select>
+      </div>
 
-        <button id="convertButton">Convert Audio</button>
+      <div class="input-group">
+        <label for="convertedOutputFolder">Converted Output Folder:</label>
+        <input type="text" id="convertedOutputFolder" readonly />
+        <button id="selectConvertedOutputFolder">Select Folder</button>
+      </div>
 
-        <div id="messages"></div>
+      <button id="convertButton">Convert Audio</button>
+
+      <div id="messages"></div>
     </div>
     <script src="renderer.js"></script>
-</body>
+  </body>
 </html>

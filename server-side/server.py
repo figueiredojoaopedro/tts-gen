@@ -38,7 +38,7 @@ else:
 class TTSRequest(BaseModel):
     text: str
     speaker_wav: str = None  # Now expects a Base64 string
-    language: str = "en"
+    language: str = "pt-br"
     model_name: str = "tts_models/multilingual/multi-dataset/xtts_v2" # Added for future use
 
 
